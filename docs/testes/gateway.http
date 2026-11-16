@@ -1,0 +1,37 @@
+###############################################################################
+# 🟣 API GATEWAY  (porta 8080)  →  a porta de entrada do app do cliente
+#
+# O gateway NÃO tem banco. Ele só encaminha (Spring Cloud Gateway):
+#   /transferencias/**  →  http://localhost:8081  (transferencia)
+#   /pagamentos/**      →  http://localhost:8082  (pagamento)
+#   /saldos/**          →  http://localhost:8083  (saldo)
+#
+# As requisições abaixo são IGUAIS às dos módulos, mas batem no :8080.
+# Servem para provar, na defesa, que o roteamento funciona ponta a ponta.
+#
+# ⚠️ O gateway não roteia /integracao-bc/** (serviço interno, não exposto ao app).
+###############################################################################
+
+### 1) Consultar saldo via gateway  →  encaminha para o :8083
+GET {{gatewayHost}}/saldos/{{contaId}}
+Accept: application/json
+
+### 2) Transferência Pix via gateway  →  encaminha para o :8081
+POST {{gatewayHost}}/transferencias/pix
+Content-Type: application/json
+
+{
+  "contaOrigemId": "{{contaId}}",
+  "chavePixDestino": "{{chavePix}}",
+  "valor": 150.00
+}
+
+### 3) Pagamento Pix via gateway  →  encaminha para o :8082
+POST {{gatewayHost}}/pagamentos/pix
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "chavePixDestino": "loja@banco.com",
+  "valor": 80.00
+}

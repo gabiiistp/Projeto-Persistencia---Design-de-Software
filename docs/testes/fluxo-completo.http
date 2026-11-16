@@ -1,0 +1,76 @@
+###############################################################################
+# 🎬 FLUXO COMPLETO PONTA A PONTA  —  roteiro para a DEMO da defesa
+#
+# Execute na ordem, com TODOS os serviços no ar (saldo, integracao-bc,
+# transferencia, pagamento, api-gateway). A ideia é mostrar o caminho
+# Controller → Service → Repository → Hibernate → SQLite acontecendo de verdade.
+#
+# Dica: deixe os consoles dos serviços visíveis para apontar o SQL
+# (insert into ...) gerado pelo Hibernate a cada passo.
+###############################################################################
+
+### PASSO 1 — Estado inicial: consultar o saldo da conta (via gateway)
+GET {{gatewayHost}}/saldos/{{contaId}}
+Accept: application/json
+
+### PASSO 2 — Validar se há saldo antes de transferir
+POST {{saldoHost}}/saldos/validar
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "valor": 150.00
+}
+
+### PASSO 3 — Efetuar uma transferência Pix (via gateway)
+# > Aponte no console do serviço: insert into transferencia_pix (...)
+# > Guarda o "id" devolvido na variável transferenciaId para o passo seguinte.
+POST {{gatewayHost}}/transferencias/pix
+Content-Type: application/json
+
+{
+  "contaOrigemId": "{{contaId}}",
+  "chavePixDestino": "{{chavePix}}",
+  "valor": 150.00
+}
+
+> {%
+    if (response.body && response.body.id) {
+        client.global.set("transferenciaId", response.body.id);
+        client.log("Transferência criada com id = " + response.body.id);
+    }
+%}
+
+### PASSO 4 — Confirmar que o saldo foi debitado
+GET {{gatewayHost}}/saldos/{{contaId}}
+Accept: application/json
+
+### PASSO 5 — Registrar a operação na Integração BC
+POST {{integracaoBcHost}}/integracao-bc/operacoes
+Content-Type: application/json
+
+{
+  "transacaoId": "{{transferenciaId}}",
+  "tipoOperacao": "TRANSFERENCIA_PIX"
+}
+
+### PASSO 6 — Efetuar um pagamento de boleto (via gateway) para mostrar outro módulo
+POST {{gatewayHost}}/pagamentos/boleto
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "codigoBarras": "34191790010104351004791020150008291070026000",
+  "vencimento": "2026-12-20",
+  "valor": 120.50
+}
+
+### PASSO 7 — Conferir o saldo final
+GET {{gatewayHost}}/saldos/{{contaId}}
+Accept: application/json
+
+###############################################################################
+# Depois, abra cada arquivo .db no painel Database do IntelliJ
+# (db_saldo.db, db_transferencia.db, db_pagamento.db, db_integracao_bc.db)
+# e mostre as linhas gravadas. Fim da demo. ✅
+###############################################################################
