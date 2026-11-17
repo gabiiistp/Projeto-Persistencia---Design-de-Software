@@ -415,11 +415,11 @@ Recebe as chamadas do app e as encaminha para `/transferencias/**`, `/pagamentos
 <details>
 <summary><b>🟢 Isabelle</b></summary>
 
-- [ ] Entidades Pix, TED e DOC
-- [ ] Repositories, Services e Controllers das 3 formas
-- [ ] `SaldoClient` integrado ao módulo Saldo
-- [ ] Cliente da Integração BC
-- [ ] Testado com Postman e conferido no `.db`
+- [X] Entidades Pix, TED e DOC
+- [X] Repositories, Services e Controllers das 3 formas
+- [X] `SaldoClient` integrado ao módulo Saldo
+- [X] Cliente da Integração BC
+- [X] Testado com Postman e conferido no `.db`
 
 </details>
 
