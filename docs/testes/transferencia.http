@@ -1,0 +1,43 @@
+###############################################################################
+# 🟢 MÓDULO TRANSFERÊNCIA  (porta 8081)
+#
+# Três formas: Pix, TED e DOC. Cada uma tem sua própria entidade/tabela.
+# Depende do módulo Saldo (SaldoClient) e da Integração BC.
+#
+# O cliente NÃO envia id/status/dataHora — o Service gera (UUID,
+# "PROCESSANDO", LocalDateTime.now()) antes do repository.save().
+###############################################################################
+
+### 1) Transferência Pix  (POST /transferencias/pix)
+POST {{transferenciaHost}}/transferencias/pix
+Content-Type: application/json
+
+{
+  "contaOrigemId": "{{contaId}}",
+  "chavePixDestino": "{{chavePix}}",
+  "valor": 150.00
+}
+
+### 2) Transferência TED  (POST /transferencias/ted)
+POST {{transferenciaHost}}/transferencias/ted
+Content-Type: application/json
+
+{
+  "contaOrigemId": "{{contaId}}",
+  "bancoDestino": "341",
+  "agenciaDestino": "1234",
+  "contaDestino": "56789-0",
+  "valor": 300.00
+}
+
+### 3) Transferência DOC  (POST /transferencias/doc)
+POST {{transferenciaHost}}/transferencias/doc
+Content-Type: application/json
+
+{
+  "contaOrigemId": "{{contaId}}",
+  "bancoDestino": "237",
+  "agenciaDestino": "4321",
+  "contaDestino": "09876-5",
+  "valor": 200.00
+}

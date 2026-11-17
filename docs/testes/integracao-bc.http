@@ -1,0 +1,30 @@
+###############################################################################
+# 🟠 MÓDULO INTEGRAÇÃO BANCO CENTRAL  (porta 8084)
+#
+# Único serviço que "fala" com o Banco Central. Registra cada operação
+# comunicada e permite reprocessamento.
+#
+# Entidade persistida: IntegracaoBancoCentralModel
+#   id (PK) · transacaoId · tipoOperacao · status · dataHora · respostaBC
+#
+# O cliente envia transacaoId e tipoOperacao; o Service costuma gerar
+# id, status, dataHora e respostaBC.
+###############################################################################
+
+### 1) Comunicar uma operação ao BC  (POST /integracao-bc/operacoes)
+POST {{integracaoBcHost}}/integracao-bc/operacoes
+Content-Type: application/json
+
+{
+  "transacaoId": "TRANSF-PIX-0001",
+  "tipoOperacao": "TRANSFERENCIA_PIX"
+}
+
+### 2) Comunicar uma operação de pagamento
+POST {{integracaoBcHost}}/integracao-bc/operacoes
+Content-Type: application/json
+
+{
+  "transacaoId": "PAG-BOLETO-0001",
+  "tipoOperacao": "PAGAMENTO_BOLETO"
+}

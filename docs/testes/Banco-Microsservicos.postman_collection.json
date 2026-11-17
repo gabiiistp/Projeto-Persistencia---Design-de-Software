@@ -1,0 +1,162 @@
+{
+  "info": {
+    "name": "Banco Microsservicos - Persistencia",
+    "description": "Colecao de testes dos microsservicos bancarios (Spring + SQLite). Use com o environment 'Banco Microsservicos - Local'. Suba os servicos nesta ordem: saldo, integracao-bc, transferencia, pagamento, api-gateway.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "contaId", "value": "CONTA-001" },
+    { "key": "chavePix", "value": "cliente@banco.com" }
+  ],
+  "item": [
+    {
+      "name": "Saldo (8083)",
+      "item": [
+        {
+          "name": "Consultar saldo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{saldoHost}}/saldos/{{contaId}}", "host": ["{{saldoHost}}"], "path": ["saldos", "{{contaId}}"] }
+          }
+        },
+        {
+          "name": "Validar saldo",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaId\": \"{{contaId}}\",\n  \"valor\": 100.00\n}" },
+            "url": { "raw": "{{saldoHost}}/saldos/validar", "host": ["{{saldoHost}}"], "path": ["saldos", "validar"] }
+          }
+        },
+        {
+          "name": "Debitar",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaId\": \"{{contaId}}\",\n  \"valor\": 50.00\n}" },
+            "url": { "raw": "{{saldoHost}}/saldos/debitar", "host": ["{{saldoHost}}"], "path": ["saldos", "debitar"] }
+          }
+        },
+        {
+          "name": "Estornar",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaId\": \"{{contaId}}\",\n  \"valor\": 50.00\n}" },
+            "url": { "raw": "{{saldoHost}}/saldos/estornar", "host": ["{{saldoHost}}"], "path": ["saldos", "estornar"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transferencia (8081)",
+      "item": [
+        {
+          "name": "Transferencia Pix",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaOrigemId\": \"{{contaId}}\",\n  \"chavePixDestino\": \"{{chavePix}}\",\n  \"valor\": 150.00\n}" },
+            "url": { "raw": "{{transferenciaHost}}/transferencias/pix", "host": ["{{transferenciaHost}}"], "path": ["transferencias", "pix"] }
+          }
+        },
+        {
+          "name": "Transferencia TED",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaOrigemId\": \"{{contaId}}\",\n  \"bancoDestino\": \"341\",\n  \"agenciaDestino\": \"1234\",\n  \"contaDestino\": \"56789-0\",\n  \"valor\": 300.00\n}" },
+            "url": { "raw": "{{transferenciaHost}}/transferencias/ted", "host": ["{{transferenciaHost}}"], "path": ["transferencias", "ted"] }
+          }
+        },
+        {
+          "name": "Transferencia DOC",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaOrigemId\": \"{{contaId}}\",\n  \"bancoDestino\": \"237\",\n  \"agenciaDestino\": \"4321\",\n  \"contaDestino\": \"09876-5\",\n  \"valor\": 200.00\n}" },
+            "url": { "raw": "{{transferenciaHost}}/transferencias/doc", "host": ["{{transferenciaHost}}"], "path": ["transferencias", "doc"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pagamento (8082)",
+      "item": [
+        {
+          "name": "Pagamento Pix",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaId\": \"{{contaId}}\",\n  \"chavePixDestino\": \"loja@banco.com\",\n  \"valor\": 80.00\n}" },
+            "url": { "raw": "{{pagamentoHost}}/pagamentos/pix", "host": ["{{pagamentoHost}}"], "path": ["pagamentos", "pix"] }
+          }
+        },
+        {
+          "name": "Pagamento Boleto",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaId\": \"{{contaId}}\",\n  \"codigoBarras\": \"34191790010104351004791020150008291070026000\",\n  \"vencimento\": \"2026-12-20\",\n  \"valor\": 120.50\n}" },
+            "url": { "raw": "{{pagamentoHost}}/pagamentos/boleto", "host": ["{{pagamentoHost}}"], "path": ["pagamentos", "boleto"] }
+          }
+        },
+        {
+          "name": "Pagamento Saldo em Conta",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaId\": \"{{contaId}}\",\n  \"descricao\": \"Mensalidade academia\",\n  \"valor\": 99.90\n}" },
+            "url": { "raw": "{{pagamentoHost}}/pagamentos/saldo-em-conta", "host": ["{{pagamentoHost}}"], "path": ["pagamentos", "saldo-em-conta"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integracao BC (8084)",
+      "item": [
+        {
+          "name": "Comunicar operacao",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"transacaoId\": \"TRANSF-PIX-0001\",\n  \"tipoOperacao\": \"TRANSFERENCIA_PIX\"\n}" },
+            "url": { "raw": "{{integracaoBcHost}}/integracao-bc/operacoes", "host": ["{{integracaoBcHost}}"], "path": ["integracao-bc", "operacoes"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Via Gateway (8080)",
+      "item": [
+        {
+          "name": "Consultar saldo (gateway)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{gatewayHost}}/saldos/{{contaId}}", "host": ["{{gatewayHost}}"], "path": ["saldos", "{{contaId}}"] }
+          }
+        },
+        {
+          "name": "Transferencia Pix (gateway)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaOrigemId\": \"{{contaId}}\",\n  \"chavePixDestino\": \"{{chavePix}}\",\n  \"valor\": 150.00\n}" },
+            "url": { "raw": "{{gatewayHost}}/transferencias/pix", "host": ["{{gatewayHost}}"], "path": ["transferencias", "pix"] }
+          }
+        },
+        {
+          "name": "Pagamento Pix (gateway)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"contaId\": \"{{contaId}}\",\n  \"chavePixDestino\": \"loja@banco.com\",\n  \"valor\": 80.00\n}" },
+            "url": { "raw": "{{gatewayHost}}/pagamentos/pix", "host": ["{{gatewayHost}}"], "path": ["pagamentos", "pix"] }
+          }
+        }
+      ]
+    }
+  ]
+}

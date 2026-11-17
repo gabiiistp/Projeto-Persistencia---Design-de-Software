@@ -1,0 +1,40 @@
+###############################################################################
+# 🟡 MÓDULO PAGAMENTO  (porta 8082)
+#
+# Três formas: Pix, Boleto e Saldo em Conta. Cada uma tem sua entidade/tabela.
+# Depende do módulo Saldo (SaldoClient) e da Integração BC.
+#
+# O cliente NÃO envia id/status/dataHora — o Service gera.
+# Observação: "vencimento" (boleto) é LocalDate → formato "AAAA-MM-DD".
+###############################################################################
+
+### 1) Pagamento Pix  (POST /pagamentos/pix)
+POST {{pagamentoHost}}/pagamentos/pix
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "chavePixDestino": "loja@banco.com",
+  "valor": 80.00
+}
+
+### 2) Pagamento de Boleto  (POST /pagamentos/boleto)
+POST {{pagamentoHost}}/pagamentos/boleto
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "codigoBarras": "34191790010104351004791020150008291070026000",
+  "vencimento": "2026-12-20",
+  "valor": 120.50
+}
+
+### 3) Pagamento com Saldo em Conta  (POST /pagamentos/saldo-em-conta)
+POST {{pagamentoHost}}/pagamentos/saldo-em-conta
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "descricao": "Mensalidade academia",
+  "valor": 99.90
+}

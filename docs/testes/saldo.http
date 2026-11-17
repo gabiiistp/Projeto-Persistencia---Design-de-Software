@@ -1,0 +1,50 @@
+###############################################################################
+# 🔵 MÓDULO SALDO  (porta 8083)
+#
+# É a base do sistema: transferência e pagamento dependem dele para
+# validar / debitar / estornar. Suba este serviço PRIMEIRO.
+#
+# Como usar no IntelliJ:
+#   1. Selecione o ambiente "local" no canto superior direito do editor .http
+#   2. Clique no ▶️ ao lado de cada requisição
+#   3. Veja o SQL no console do serviço (spring.jpa.show-sql=true)
+#
+# ⚠️ Contrato de validar/debitar/estornar ainda em alinhamento com a Gabriela.
+#    O corpo abaixo ({ contaId, valor }) é a sugestão da Laura — ajustar se o
+#    módulo Saldo esperar outro formato.
+###############################################################################
+
+### 1) Consultar saldo de uma conta  (GET /saldos/{contaId})
+GET {{saldoHost}}/saldos/{{contaId}}
+Accept: application/json
+
+### 2) Validar se há saldo suficiente  (POST /saldos/validar)
+POST {{saldoHost}}/saldos/validar
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "valor": 100.00
+}
+
+### 3) Debitar da conta  (POST /saldos/debitar)   — operação @Transactional
+POST {{saldoHost}}/saldos/debitar
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "valor": 50.00
+}
+
+### 4) Estornar (devolver) para a conta  (POST /saldos/estornar)  — @Transactional
+POST {{saldoHost}}/saldos/estornar
+Content-Type: application/json
+
+{
+  "contaId": "{{contaId}}",
+  "valor": 50.00
+}
+
+### 5) Consultar de novo para conferir o efeito do débito/estorno
+GET {{saldoHost}}/saldos/{{contaId}}
+Accept: application/json
