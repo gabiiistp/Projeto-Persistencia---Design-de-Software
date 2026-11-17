@@ -13,6 +13,12 @@ public class SaldoClient {
     public record SaldoRequest(String contaId, BigDecimal valor) {
     }
 
+    public record ValidacaoSaldoResponse(String contaId,
+                                         BigDecimal valor,
+                                         BigDecimal saldoDisponivel,
+                                         boolean saldoSuficiente) {
+    }
+
     private final RestClient restClient;
 
     public SaldoClient(@Value("${servicos.saldo.url}") String saldoUrl) {
@@ -22,13 +28,13 @@ public class SaldoClient {
     }
 
     public boolean validarSaldo(String contaId, BigDecimal valor) {
-        Boolean resposta = restClient.post()
+        ValidacaoSaldoResponse resposta = restClient.post()
                 .uri("/saldos/validar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new SaldoRequest(contaId, valor))
                 .retrieve()
-                .body(Boolean.class);
-        return Boolean.TRUE.equals(resposta);
+                .body(ValidacaoSaldoResponse.class);
+        return resposta != null && resposta.saldoSuficiente();
     }
 
     public void debitar(String contaId, BigDecimal valor) {
