@@ -402,13 +402,13 @@ Recebe as chamadas do app e as encaminha para `/transferencias/**`, `/pagamentos
 <details>
 <summary><b>🔵🟠 Gabriela</b></summary>
 
-- [ ] Repositório criado e colegas adicionados
-- [ ] POM pai com os 5 módulos
-- [ ] `.gitignore` configurado
-- [ ] Saldo: `SaldoModel`, `SaldoRepository`, `SaldoService`, `SaldoController`
-- [ ] Saldo: `validar`, `debitar` e `estornar` com `@Transactional`
-- [ ] Integração BC: `IntegracaoBancoCentralModel`, Repository, Service, Controller
-- [ ] Testado com Postman e conferido no `.db`
+- [X] Repositório criado e colegas adicionados
+- [X] POM pai com os 5 módulos
+- [X] `.gitignore` configurado
+- [X] Saldo: `SaldoModel`, `SaldoRepository`, `SaldoService`, `SaldoController`
+- [X] Saldo: `validar`, `debitar` e `estornar` com `@Transactional`
+- [X] Integração BC: `IntegracaoBancoCentralModel`, Repository, Service, Controller
+- [X] Testado com Postman e conferido no `.db`
 
 </details>
 
@@ -426,21 +426,20 @@ Recebe as chamadas do app e as encaminha para `/transferencias/**`, `/pagamentos
 <details>
 <summary><b>🟡 Pedro</b></summary>
 
-- [ ] Entidades Pix, Boleto e SaldoEmConta
-- [ ] Repositories, Services e Controllers das 3 formas
-- [ ] `SaldoClient` integrado ao módulo Saldo
-- [ ] Cliente da Integração BC
-- [ ] Testado com Postman e conferido no `.db`
+- [X] Entidades Pix, Boleto e SaldoEmConta
+- [X] Repositories, Services e Controllers das 3 formas
+- [X] `SaldoClient` integrado ao módulo Saldo
+- [X] Cliente da Integração BC
+- [X] Testado com Postman e conferido no `.db`
 
 </details>
 
 <details>
 <summary><b>🟣🧪 Laura</b></summary>
 
-- [ ] Gateway com as rotas para os 3 serviços
-- [ ] Coleção Postman / `.http` completa
-- [ ] README revisado
-- [ ] Roteiro de ensaio da defesa pronto
+- [X] Gateway com as rotas para os 3 serviços
+- [X] Coleção Postman / `.http` completa
+- [X] README revisado
 
 </details>
 
